@@ -17,8 +17,8 @@ static def getChangeLogString(RunWrapper build) {
     def changeLogSets = build.changeSets
     
     build.changeSets.each { set ->
-        set.items.each {
-            str+= "- ${it.msg} [${it.author}]\n"
+        set.items.each { item ->
+            str+= "- ${item.msg} [${item.author}]\n"
         }
     }
     
