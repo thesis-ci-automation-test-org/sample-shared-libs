@@ -16,14 +16,12 @@ static def getChangeLogString(RunWrapper build) {
     def str = ""
     def changeLogSets = build.changeSets
     
-    for (int i = 0; i < changeLogSets.size(); i++) {
-        def entries = changeLogSets[i].items
-        for (int j = 0; j < entries.length; j++) {
-            def entry = entries[j]
-            str += "- ${entry.msg} [${entry.author}]\n"
+    build.changeSets.each { set ->
+        set.items.each {
+            str+= "- ${it.msg} [${it.author}]\n"
         }
     }
-
+    
     if (!str) {
         return "No Changes."
     } else {
