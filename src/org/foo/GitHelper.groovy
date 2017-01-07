@@ -6,11 +6,12 @@ package org.foo
  * as a multiline string.
  *
  * Includes commit messages and authors.
+ * @param build Current build
  * @return String
  */
-static def getChangeLogString() {
+static def getChangeLogString(RunWrapper build) {
     def str = ""
-    def changeLogSets = currentBuild.changeSets
+    def changeLogSets = build.changeSets
     
     for (int i = 0; i < changeLogSets.size(); i++) {
         def entries = changeLogSets[i].items
@@ -23,7 +24,7 @@ static def getChangeLogString() {
     if (!str) {
         return "No Changes."
     } else {
-        str = "${currentBuild.getFullDisplayName()} Changes:\n" + str
+        str = "${build.getFullDisplayName()} Changes:\n" + str
     }
 
     return str    
