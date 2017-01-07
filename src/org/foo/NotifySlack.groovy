@@ -2,7 +2,7 @@
 
 package org.foo
 
-def getNumber() {
+static def getNumber() {
   return 3
 }
 
