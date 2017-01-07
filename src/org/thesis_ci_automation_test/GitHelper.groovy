@@ -11,6 +11,7 @@ import org.jenkinsci.plugins.workflow.support.steps.build.RunWrapper
  * @param build Current build
  * @return String
  */
+@NonCPS
 static def getChangeLogString(RunWrapper build) {
     def str = ""
     def changeLogSets = build.changeSets
