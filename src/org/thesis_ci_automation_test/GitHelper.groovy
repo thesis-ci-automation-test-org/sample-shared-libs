@@ -13,13 +13,12 @@ import org.jenkinsci.plugins.workflow.support.steps.build.RunWrapper
  */
 @NonCPS
 static def getChangeLogString(RunWrapper build) {
-    def str = ""
-    def changeLogSets = build.changeSets
-    
-    build.changeSets.each { set ->
-        set.items.each { item ->
-            str+= "- ${item.msg} [${item.author}]\n"
+    def str = build.changeSets.inject("") { result, set ->
+        result += set.items.inject("") { itemResult, item ->
+            itemResult += "- ${item.msg} [${item.author}]\n"
+            itemResult
         }
+        result
     }
     
     if (!str) {
