@@ -1,6 +1,8 @@
 #!/usr/bin/env groovy
 package org.foo
 
+import org.jenkinsci.plugins.workflow.support.steps.build.RunWrapper
+
 /**
  * Get Git changelog log for current build
  * as a multiline string.
