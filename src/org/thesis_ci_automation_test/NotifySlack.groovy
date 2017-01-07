@@ -7,7 +7,7 @@ package org.thesis_ci_automation_test
  * @param result Result string TODO: Use actual result enum
  */
 @NonCPS
-static def notify(script, result = 'FAILURE') {
+static def notify(script, steps, result = 'FAILURE') {
     def msg = "${script.currentBuild.getFullDisplayName()} - Build failed!"
     def color = "danger"
     if (result == 'SUCCESS') {
@@ -20,8 +20,8 @@ static def notify(script, result = 'FAILURE') {
     msg += "\nTest Status:\n"
     msg += "Passed: TODO, Failed: TODO, Skipped: TODO"
 
-    slackSend color: color, message: msg
-    slackSend color: color, message: GitHelper.getChangeLogString(script)
+    steps.slackSend color: color, message: msg
+    steps.slackSend color: color, message: GitHelper.getChangeLogString(script)
 }
 
 return this
