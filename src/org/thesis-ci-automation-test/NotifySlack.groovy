@@ -1,6 +1,5 @@
 #!/usr/bin/env groovy
-
-package org.foo
+package org.thesis-ci-automation-test
 
 static def getNumber() {
   return 3
