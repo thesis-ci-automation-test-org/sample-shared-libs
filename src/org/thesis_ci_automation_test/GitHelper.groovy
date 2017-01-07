@@ -1,5 +1,5 @@
 #!/usr/bin/env groovy
-package org.thesis-ci-automation-test
+package org.thesis_ci_automation_test
 
 import org.jenkinsci.plugins.workflow.support.steps.build.RunWrapper
 
