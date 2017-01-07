@@ -6,6 +6,4 @@ def getNumber() {
   return 3
 }
 
-class NotifySlack {
-  float x,y,z;
-}
+return this
