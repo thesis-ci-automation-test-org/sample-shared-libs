@@ -11,18 +11,18 @@ package org.thesis_ci_automation_test
 @NonCPS
 static def notify(script, steps, result = 'FAILURE') {
     def msg = "${script.currentBuild.getFullDisplayName()}"
-    def color = "danger"
+    def colour = "danger"
 
     switch (result) {
         case 'FAILURE':
             msg += " - Build failed!"
-            color = SlackColours.DANGER
+            colour = SlackColours.DANGER
             break
         case 'SUCCESS':
             msg += " - Build successful"
-            color = SlackColours.GOOD
+            colour = SlackColours.GOOD
         default:
-            color = SlackColours.WARNING
+            colour = SlackColours.WARNING
             break
     }
 
@@ -32,8 +32,8 @@ static def notify(script, steps, result = 'FAILURE') {
     //msg += "\nTest Status:\n"
     //msg += "Passed: TODO, Failed: TODO, Skipped: TODO"
 
-    steps.slackSend color: color.toString(), message: msg
-    steps.slackSend color: color.toString(), message: GitHelper.getChangeLogString(script)
+    steps.slackSend color: colour.colour, message: msg
+    steps.slackSend color: colour.colour, message: GitHelper.getChangeLogString(script)
 }
 
 return this

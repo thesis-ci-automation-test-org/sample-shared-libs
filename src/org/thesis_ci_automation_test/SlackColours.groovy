@@ -8,8 +8,4 @@ enum SlackColours {
     }
 
     private final String colour
-
-    public String toString() {
-        return this.colour
-    }
 }
