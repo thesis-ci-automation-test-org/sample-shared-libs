@@ -19,11 +19,9 @@ static def notify(script, steps, result = 'FAILURE') {
             colour = SlackColours.DANGER
             break
         case 'SUCCESS':
+        default:
             msg += " - Build successful"
             colour = SlackColours.GOOD
-        default:
-            colour = SlackColours.WARNING
-            break
     }
 
     msg += " (<${script.env.BUILD_URL}|Open>)"
