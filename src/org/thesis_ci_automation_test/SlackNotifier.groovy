@@ -1,12 +1,12 @@
 #!/usr/bin/env groovy
 package org.thesis_ci_automation_test
 
-import hudson.model.Result
-
 /**
  * Notify Slack about build results
+ *
+ * TODO: Use actual result enum, when whitelisted in scripts
  * @param script Instance of pipeline script
- * @param result Result string TODO: Use actual result enum
+ * @param result Result string
  */
 @NonCPS
 static def notify(script, steps, result = 'FAILURE') {
@@ -14,11 +14,11 @@ static def notify(script, steps, result = 'FAILURE') {
     def color = "danger"
 
     switch (result) {
-        case Result.FAILURE:
+        case 'FAILURE':
             msg += " - Build failed!"
             color = SlackColours.DANGER
             break
-        case Result.SUCCESS:
+        case 'SUCCESS':
             msg += " - Build successful"
             color = SlackColours.GOOD
         default:
