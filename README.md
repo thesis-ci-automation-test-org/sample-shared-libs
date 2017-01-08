@@ -5,7 +5,8 @@ Sample of Jenkins Pipeline Shared Libraries
 
 ```groovy
 @Library('github.com/thesis-ci-automation-test-org/sample-shared-libs@master') // Make library usable for this pipeline
-import org.thesis_ci_automation_test.* // Import to use a simpler namespace in code
+// Import to use a simpler namespace in code
+import org.thesis_ci_automation_test.*
 
 node {
   stage('Build') {
