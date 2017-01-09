@@ -33,8 +33,8 @@ static def notify(script, steps, result = 'FAILURE') {
     def changelog = GitHelper.getChangeLogString(script)
     steps.echo changelog
 
-    steps.slackSend color: colour.colour, message: msg
-    steps.slackSend color: colour.colour, message: changelog
+    steps.slackSend color: colour.colour, message: msg, failOnError: true
+    steps.slackSend color: colour.colour, message: changelog, failOnError: true
 }
 
 return this
