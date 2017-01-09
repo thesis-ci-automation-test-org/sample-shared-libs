@@ -12,7 +12,8 @@ package org.thesis_ci_automation_test
 @NonCPS
 static def getChangeLogString(script) {
     def str = ""
- 
+
+    // TODO: Ignore changes in libraries?
     script.currentBuild.changeSets.each { set ->
         set.items.each { item ->
             str+= "- ${item.msg} [${item.author}]\n"
@@ -22,7 +23,7 @@ static def getChangeLogString(script) {
     if (!str) {
         return "No Changes."
     } else {
-        str = "${script.currentBuild.getFullDisplayName()} Changes:\n" + str
+        str = "Changes:\n" + str
     }
 
     return str    
