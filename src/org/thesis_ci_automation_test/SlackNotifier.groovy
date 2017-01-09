@@ -24,6 +24,9 @@ static def notify(script, steps, result) {
     def colour = SlackNotifier.getSlackColour(result)
 
     switch (result) {
+        case 'ABORTED':
+            // Don't send any notifications, bail out
+            return
         case 'FAILURE':
             msg += " - Build failed!"
             break
