@@ -1,7 +1,7 @@
 #!/usr/bin/env groovy
 package org.thesis_ci_automation_test
 
-def getSlackColour(result = 'FAILURE') {
+static def getSlackColour(result = 'FAILURE') {
     result = result ?: 'SUCCESS' // null result means success
     switch (result) {
         case 'FAILURE':
@@ -21,7 +21,7 @@ def getSlackColour(result = 'FAILURE') {
 static def notify(script, steps, result) {
     result = result ?: 'SUCCESS' // null result means success
     def msg = "${script.currentBuild.getFullDisplayName()}"
-    def colour = getSlackColour(result)
+    def colour = SlackNotifier.getSlackColour(result)
 
     switch (result) {
         case 'FAILURE':
@@ -47,7 +47,7 @@ static def notify(script, steps, result) {
  * Notify Slack about changes in version control
  */
 static def notifyChangeLog(script, steps, result) {
-    steps.slackSend color: getSlackColour(result).colour, message: GitHelper.getChangeLogString(script)
+    steps.slackSend color: SlackNotifier.getSlackColour(result).colour, message: GitHelper.getChangeLogString(script)
 }
 
 return this
