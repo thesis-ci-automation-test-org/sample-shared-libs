@@ -1,27 +1,35 @@
 #!/usr/bin/env groovy
 package org.thesis_ci_automation_test
 
+def getSlackColour(result = 'FAILURE') {
+    result = result ?: 'SUCCESS' // null result means success
+    switch (result) {
+        case 'FAILURE':
+            return SlackColours.DANGER
+        case 'SUCCESS':
+            return SlackColours.GOOD
+        default:
+            return SlackColours.WARNING // Don't know what happened
+    }
+}
+
 /**
  * Notify Slack about build results
  *
  * TODO: Use actual result enum, when whitelisted in scripts
- * @param script Instance of pipeline script
- * @param result Result string
  */
-@NonCPS
-static def notify(script, steps, result = 'FAILURE') {
+static def notify(script, steps, result) {
+    result = result ?: 'SUCCESS' // null result means success
     def msg = "${script.currentBuild.getFullDisplayName()}"
-    def colour = "danger"
+    def colour = getSlackColour(result)
 
     switch (result) {
         case 'FAILURE':
             msg += " - Build failed!"
-            colour = SlackColours.DANGER
             break
         case 'SUCCESS':
         default:
             msg += " - Build successful"
-            colour = SlackColours.GOOD
     }
 
     msg += " (<${script.env.BUILD_URL}|Open>)"
@@ -30,11 +38,16 @@ static def notify(script, steps, result = 'FAILURE') {
     //msg += "\nTest Status:\n"
     //msg += "Passed: TODO, Failed: TODO, Skipped: TODO"
 
-    def changelog = GitHelper.getChangeLogString(script)
-    steps.echo changelog
+    // NOTE: For some reason, calling slackSend stops execution in this thread
+    // and try-catch does not see it. So, we can only send one message.
+    steps.slackSend color: colour.colour, message: msg
+}
 
-    steps.slackSend color: colour.colour, message: msg, failOnError: true
-    steps.slackSend color: colour.colour, message: changelog, failOnError: true
+/**
+ * Notify Slack about changes in version control
+ */
+static def notifyChangeLog(script, steps, result) {
+    steps.slackSend color: getSlackColour(result).colour, message: GitHelper.getChangeLogString(script)
 }
 
 return this
