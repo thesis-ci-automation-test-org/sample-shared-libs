@@ -37,17 +37,18 @@ static def notify(script, steps, result) {
     // TODO: Enable when test results are accessible from JUnit
     //msg += "\nTest Status:\n"
     //msg += "Passed: TODO, Failed: TODO, Skipped: TODO"
+    
+    // Include Git changelog
+    msg += "\n${GitHelper.getChangeLogString(script)}"
 
     // NOTE: For some reason, calling slackSend stops execution in this thread
     // and try-catch does not see it. So, we can only send one message.
-    steps.slackSend color: colour.colour, message: msg
+    SlackNotifier.sendMessage(steps, colour.colour, msg)
 }
 
-/**
- * Notify Slack about changes in version control
- */
-static def notifyChangeLog(script, steps, result) {
-    steps.slackSend color: SlackNotifier.getSlackColour(result).colour, message: GitHelper.getChangeLogString(script)
+static def sendMessage(steps, colour, msg) {
+    steps.slackSend color: colour, message: msg
 }
 
 return this
+
