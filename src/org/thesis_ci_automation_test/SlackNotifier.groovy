@@ -30,8 +30,11 @@ static def notify(script, steps, result = 'FAILURE') {
     //msg += "\nTest Status:\n"
     //msg += "Passed: TODO, Failed: TODO, Skipped: TODO"
 
+    def changelog = GitHelper.getChangeLogString(script)
+    steps.echo changelog
+
     steps.slackSend color: colour.colour, message: msg
-    steps.slackSend color: colour.colour, message: GitHelper.getChangeLogString(script)
+    steps.slackSend color: colour.colour, message: changelog
 }
 
 return this
