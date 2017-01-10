@@ -4,4 +4,5 @@ static def getBuildLink(env) {
     return "<${env.BUILD_URL}|Open>"
 }
 
-return this 
+return this
+
