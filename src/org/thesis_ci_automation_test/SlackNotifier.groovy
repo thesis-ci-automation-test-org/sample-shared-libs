@@ -1,7 +1,7 @@
 #!/usr/bin/env groovy
 package org.thesis_ci_automation_test
 
-static def getSlackColour(result = 'FAILURE') {
+static def getSlackColour(result) {
     result = result ?: 'SUCCESS' // null result means success
     switch (result) {
         case 'FAILURE':
@@ -23,8 +23,10 @@ static def notify(script, steps, result) {
     def msg = "${script.currentBuild.getFullDisplayName()}"
     def colour = SlackNotifier.getSlackColour(result)
 
+    result = result.toString()
     switch (result) {
         case 'ABORTED':
+            steps.echo 'SlackNotifier: Build was aborted, skipping Slack messages'
             // Don't send any notifications, bail out
             return
         case 'FAILURE':
@@ -38,7 +40,7 @@ static def notify(script, steps, result) {
             steps.echo "SlackNotifier: Did not recognize build status code: ${result}"
     }
 
-    msg += " (<${script.env.BUILD_URL}|Open>)"
+    msg += " (${Utils.getBuildLink(script.env)})"
 
     // TODO: Enable when test results are accessible from JUnit
     //msg += "\nTest Status:\n"
