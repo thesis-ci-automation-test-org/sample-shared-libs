@@ -31,8 +31,11 @@ static def notify(script, steps, result) {
             msg += " - Build failed!"
             break
         case 'SUCCESS':
-        default:
             msg += " - Build successful"
+            break
+        default:
+            msg += " - Build status unknown, see logs"
+            steps.echo "SlackNotifier: Did not recognize build status code: ${result}"
     }
 
     msg += " (<${script.env.BUILD_URL}|Open>)"
