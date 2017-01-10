@@ -19,11 +19,10 @@ static def getSlackColour(result) {
  * TODO: Use actual result enum, when whitelisted in scripts
  */
 static def notify(script, steps, result) {
-    result = result ?: 'SUCCESS' // null result means success
+    result = result?.toString() : 'SUCCESS' // null result means success
     def msg = "${script.currentBuild.getFullDisplayName()}"
     def colour = SlackNotifier.getSlackColour(result)
 
-    result = result.toString()
     switch (result) {
         case 'ABORTED':
             steps.echo 'SlackNotifier: Build was aborted, skipping Slack messages'
