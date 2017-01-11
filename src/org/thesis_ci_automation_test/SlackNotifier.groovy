@@ -52,7 +52,7 @@ def notify(build, result, env) {
 
   // NOTE: For some reason, calling slackSend stops execution in this thread
   // and try-catch does not see it. So, we can only send one message.
-  sendMessage(steps, colour.colour, msg)
+  sendMessage(colour.colour, msg)
 }
 
 def sendMessage(colour, msg) {
