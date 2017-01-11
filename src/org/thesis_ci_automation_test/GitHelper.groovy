@@ -6,15 +6,16 @@ package org.thesis_ci_automation_test
  * as a multiline string.
  *
  * Includes commit messages and authors.
- * @param script Instance of pipeline script
+ * @param build Current build
  * @return String
  */
 @NonCPS
-static def getChangeLogString(script) {
+def getChangeLogString(build) {
     def str = ""
 
-    // TODO: Ignore changes in libraries?
-    script.currentBuild.changeSets.each { set ->
+    // NOTE: Includes changes in this library
+    // which is probably OK
+    currentBuild.changeSets.each { set ->
         set.items.each { item ->
             str+= "- ${item.msg} [${item.author}]\n"
         }
@@ -29,4 +30,3 @@ static def getChangeLogString(script) {
     return str    
 }
 
-return this
