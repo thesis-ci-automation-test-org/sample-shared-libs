@@ -43,6 +43,7 @@ def call(body) {
       dockerEnv.inside(dockerEnvArgs) {
  
         stage('Checkout') {
+          deleteDir()
           checkout scm
         }
  
