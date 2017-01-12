@@ -89,7 +89,7 @@ def call(body) {
  
     stage('Prepare production deploy') {
       // Production deploys should only be made from master
-      if (env.BRANCH_NAME == 'master') {
+      if (env.BRANCH_NAME != 'master') { // TODO: Revert to "== master"
         milestone 4
 
         // As there's currently no good way to visualize
@@ -120,7 +120,7 @@ def call(body) {
     node {
       dockerEnv.inside(dockerEnvArgs) {
         stage('Production deploy') {
-          if (env.BRANCH_NAME != 'master') {
+          if (env.BRANCH_NAME != 'master') { // TODO: Revert to "== master"
             milestone 6
             lock(resource: 'prod-server', inversePrecedence: true) {
               milestone 7
