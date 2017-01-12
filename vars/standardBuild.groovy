@@ -27,6 +27,7 @@ def call(body) {
   def utils = new Utils()
 
   def dockerEnv = null
+  def dockerEnvArgs = '-v /var/run/docker.sock:/var/run/docker.sock'
 
   // Keep only last 5 builds
   properties([buildDiscarder(logRotator(numToKeepStr: '5'))])
@@ -39,7 +40,7 @@ def call(body) {
     node {
       // This image will be re-used later, so save a reference
       dockerEnv = docker.build("${config.projectName}_build", '-f Dockerfile.test .')
-      dockerEnv.inside {
+      dockerEnv.inside(dockerEnvArgs) {
  
         stage('Checkout') {
           checkout scm
@@ -109,7 +110,7 @@ def call(body) {
   
         node {
           // Re-use the previously created Docker image
-          dockerEnv.inside {
+          dockerEnv.inside(dockerEnvArgs) {
             sh 'npm run build:prod'
           }
         }
@@ -117,7 +118,7 @@ def call(body) {
     }
   
     node {
-      dockerEnv.inside {
+      dockerEnv.inside(dockerEnvArgs) {
         stage('Production deploy') {
           if (env.BRANCH_NAME != 'master') {
             milestone 6
