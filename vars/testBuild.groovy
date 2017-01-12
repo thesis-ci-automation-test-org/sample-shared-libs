@@ -1,3 +1,5 @@
 def call() {
-  echo 'ding'
+  return { build ->
+    echo 'ding'
+  }
 }
