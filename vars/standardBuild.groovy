@@ -36,96 +36,98 @@ def call(body) {
   // manually manage errors and post-actions,
   // so wrap everything in try-catch-finally.
   try {
- 
-    node {
-      // This image will be re-used later, so save a reference
-      dockerEnv = docker.build("${config.projectName}_build", '-f Dockerfile.test .')
-      dockerEnv.inside(dockerEnvArgs) {
- 
-        stage('Checkout') {
-          deleteDir()
-          checkout scm
-        }
- 
-        stage('Build') {
-          sh 'npm run dependencies'
-        }
 
-        stage('Test') {
-          try {
-            sh 'grunt unit'
-          } finally {
-            // Test results should always be saved (or attempted)
-            junit 'test-results/**/unit-test-results.xml'
+    ansiColor('xterm') {
+      node {
+        // This image will be re-used later, so save a reference
+        dockerEnv = docker.build("${config.projectName}_build", '-f Dockerfile.test .')
+        dockerEnv.inside(dockerEnvArgs) {
+   
+          stage('Checkout') {
+            deleteDir()
+            checkout scm
           }
+   
+          stage('Build') {
+            sh 'npm run dependencies'
+          }
+  
+          stage('Test') {
+            try {
+              sh 'grunt unit'
+            } finally {
+              // Test results should always be saved (or attempted)
+              junit 'test-results/**/unit-test-results.xml'
+            }
+          }
+   
+          stage('Prepare dev deploy') {
+            // Deployment's should only be made from the dev branch.
+            // Blue Ocean will also mark this stage "Skipped",
+            // as there are no steps executed in else-case.
+            //
+            // This is clearer than skipping whole stages,
+            // as then they would not be rendered at all.
+            if (env.BRANCH_NAME == 'dev') {
+              milestone 1
+              sh 'npm run build:dev'
+            }
+          }
+   
+          stage('Development deploy') {
+            if (env.BRANCH_NAME == 'dev') {
+              milestone 2
+  
+              // We should only allow a single deploy at a time
+              lock(resource: 'dev-server', inversePrecedence: true) {
+                milestone 3
+                sh './deploy.dev.sh'
+              }
+            }
+          }
+  
         }
- 
-        stage('Prepare dev deploy') {
-          // Deployment's should only be made from the dev branch.
-          // Blue Ocean will also mark this stage "Skipped",
-          // as there are no steps executed in else-case.
+      }
+   
+      stage('Prepare production deploy') {
+        // Production deploys should only be made from master
+        if (env.BRANCH_NAME != 'master') { // TODO: Revert to "== master"
+          milestone 4
+  
+          // As there's currently no good way to visualize
+          // pending inputs, we need to manually notify users.
+          slack.sendMessage(
+            SlackColours.GOOD.colour,
+            "${currentBuild.getFullDisplayName()} - Waiting for input (${utils.getBuildLink(env)})"
+          )
+          input 'Deploy to production?'
+  
+          // When a milestone is passed, no currently running
+          // other job can pass the same milestone,
+          // and will be cancelled.
           //
-          // This is clearer than skipping whole stages,
-          // as then they would not be rendered at all.
-          if (env.BRANCH_NAME == 'dev') {
-            milestone 1
-            sh 'npm run build:dev'
-          }
-        }
- 
-        stage('Development deploy') {
-          if (env.BRANCH_NAME == 'dev') {
-            milestone 2
-
-            // We should only allow a single deploy at a time
-            lock(resource: 'dev-server', inversePrecedence: true) {
-              milestone 3
-              sh './deploy.dev.sh'
+          // This is used in combination with input to only allow
+          // the selected build to deploy.
+          milestone 5
+    
+          node {
+            // Re-use the previously created Docker image
+            dockerEnv.inside(dockerEnvArgs) {
+              sh 'npm run build:prod'
             }
           }
         }
-
       }
-    }
- 
-    stage('Prepare production deploy') {
-      // Production deploys should only be made from master
-      if (env.BRANCH_NAME != 'master') { // TODO: Revert to "== master"
-        milestone 4
-
-        // As there's currently no good way to visualize
-        // pending inputs, we need to manually notify users.
-        slack.sendMessage(
-          SlackColours.GOOD.colour,
-          "${currentBuild.getFullDisplayName()} - Waiting for input (${utils.getBuildLink(env)})"
-        )
-        input 'Deploy to production?'
-
-        // When a milestone is passed, no currently running
-        // other job can pass the same milestone,
-        // and will be cancelled.
-        //
-        // This is used in combination with input to only allow
-        // the selected build to deploy.
-        milestone 5
-  
-        node {
-          // Re-use the previously created Docker image
-          dockerEnv.inside(dockerEnvArgs) {
-            sh 'npm run build:prod'
-          }
-        }
-      }
-    }
-  
-    node {
-      dockerEnv.inside(dockerEnvArgs) {
-        stage('Production deploy') {
-          if (env.BRANCH_NAME != 'master') { // TODO: Revert to "== master"
-            milestone 6
-            lock(resource: 'prod-server', inversePrecedence: true) {
-              milestone 7
-              sh './deploy.prod.sh'
+    
+      node {
+        dockerEnv.inside(dockerEnvArgs) {
+          stage('Production deploy') {
+            if (env.BRANCH_NAME != 'master') { // TODO: Revert to "== master"
+              milestone 6
+              lock(resource: 'prod-server', inversePrecedence: true) {
+                milestone 7
+                sh './deploy.prod.sh'
+              }
             }
           }
         }
