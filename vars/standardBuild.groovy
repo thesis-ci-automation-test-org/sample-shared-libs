@@ -54,9 +54,9 @@ def call(body) {
 
           stage('Test') {
             try {
-              parallel unitTests: {
+              parallel 'Unit tests': {
                 sh 'grunt unit'
-              }, smokeTests: {
+              }, 'Smoke tests': {
                 sleep 10
                 echo 'Do some rudimentary smoke tests here'
               }
