@@ -58,7 +58,7 @@ def notify(build, result, env) {
       }
       break
     case 'SUCCESS':
-      if (build.previousBuild.result == 'FAILURE' {
+      if (build.previousBuild.result == 'FAILURE') {
         msg += ' - Back to normal'
       } else {
         msg += ' - Build successful'
