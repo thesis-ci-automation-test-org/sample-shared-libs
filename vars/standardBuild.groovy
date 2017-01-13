@@ -22,7 +22,7 @@ def call(body) {
   body()
 
   // ACTUAL BUILD BEGINS
-  
+
   def slack = new SlackNotifier()
   def utils = new Utils()
 
@@ -39,19 +39,19 @@ def call(body) {
 
     ansiColor('xterm') {
       node {
+        stage('Checkout') {
+          deleteDir()
+          checkout scm
+        }
+
         // This image will be re-used later, so save a reference
         dockerEnv = docker.build("${config.projectName}_build", '-f Dockerfile.test .')
         dockerEnv.inside(dockerEnvArgs) {
-   
-          stage('Checkout') {
-            deleteDir()
-            checkout scm
-          }
-   
+
           stage('Build') {
             sh 'npm run dependencies'
           }
-  
+
           stage('Test') {
             try {
               sh 'grunt unit'
@@ -60,7 +60,7 @@ def call(body) {
               junit 'test-results/**/unit-test-results.xml'
             }
           }
-   
+
           stage('Prepare dev deploy') {
             // Deployment's should only be made from the dev branch.
             // Blue Ocean will also mark this stage "Skipped",
@@ -73,7 +73,7 @@ def call(body) {
               sh 'npm run build:dev'
             }
           }
-   
+
           stage('Development deploy') {
             if (env.BRANCH_NAME == 'dev') {
               milestone 2
@@ -85,15 +85,15 @@ def call(body) {
               }
             }
           }
-  
+
         }
       }
-   
+
       stage('Prepare production deploy') {
         // Production deploys should only be made from master
         if (env.BRANCH_NAME != 'master') { // TODO: Revert to "== master"
           milestone 4
-  
+
           // As there's currently no good way to visualize
           // pending inputs, we need to manually notify users.
           slack.sendMessage(
@@ -101,7 +101,7 @@ def call(body) {
             "${currentBuild.getFullDisplayName()} - Waiting for input (${utils.getBuildLink(env)})"
           )
           input 'Deploy to production?'
-  
+
           // When a milestone is passed, no currently running
           // other job can pass the same milestone,
           // and will be cancelled.
@@ -109,7 +109,7 @@ def call(body) {
           // This is used in combination with input to only allow
           // the selected build to deploy.
           milestone 5
-    
+
           node {
             // Re-use the previously created Docker image
             dockerEnv.inside(dockerEnvArgs) {
@@ -118,7 +118,7 @@ def call(body) {
           }
         }
       }
-    
+
       node {
         dockerEnv.inside(dockerEnvArgs) {
           stage('Production deploy') {
@@ -133,7 +133,7 @@ def call(body) {
         }
       }
     }
-  
+
   } catch (err) {
     // TODO: Handle ABORTED separately
     currentBuild.result = 'FAILURE'
