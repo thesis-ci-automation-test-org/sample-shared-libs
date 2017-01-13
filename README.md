@@ -3,9 +3,22 @@ Sample of Jenkins Pipeline Shared Libraries
 
 ## Usage
 
+### Of a standardized build / globals
+
+```groovy
+@Library('thesisSampleLib') _
+
+standardBuild {
+  projectName = 'my-project-name'
+}
+
+```
+
+### Of modules
+
 ```groovy
 // Make library usable for this pipeline
-@Library('github.com/thesis-ci-automation-test-org/sample-shared-libs@master')
+@Library('thesisSampleLib')
 // Import to use a simpler namespace in code
 import org.thesis_ci_automation_test.*
 
@@ -19,5 +32,7 @@ node {
 
 ## Development
 
-Add all libraries under `src/`, like any Java/Groovy library.
+Add all modules under `src/`, like any Java/Groovy library.
+
+Global pipeline methods should be placed inside `vars/`.
 

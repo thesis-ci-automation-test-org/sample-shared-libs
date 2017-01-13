@@ -6,10 +6,10 @@ Provides a highly standardized build.
 
 This is a **full** `Jenkinsfile` example:
 
-<code>
+```
 @Library('thesisSampleLib') _
 
 standardBuild {
   projectName = 'my-project-name'
 }
-</code>
+```

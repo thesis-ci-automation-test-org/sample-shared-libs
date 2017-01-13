@@ -27,6 +27,7 @@ def call(body) {
   def utils = new Utils()
 
   def dockerEnv = null
+  def dockerBuildArgs = '-f Dockerfile.test .'
   def dockerEnvArgs = '-v /var/run/docker.sock:/var/run/docker.sock'
 
   // Keep only last 5 builds
@@ -45,7 +46,7 @@ def call(body) {
         }
 
         // This image will be re-used later, so save a reference
-        dockerEnv = docker.build("${config.projectName}_build", '-f Dockerfile.test .')
+        dockerEnv = docker.build("${config.projectName}_build", dockerBuildArgs)
         dockerEnv.inside(dockerEnvArgs) {
 
           stage('Build') {
