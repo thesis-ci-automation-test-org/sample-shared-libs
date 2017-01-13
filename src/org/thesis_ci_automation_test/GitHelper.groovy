@@ -1,6 +1,9 @@
 #!/usr/bin/env groovy
 package org.thesis_ci_automation_test
 
+// Sample module for Git actions,
+// like getting a pretty-printed changelog.
+
 /**
  * Get Git changelog log for current build
  * as a multiline string.

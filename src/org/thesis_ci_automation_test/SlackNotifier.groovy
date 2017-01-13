@@ -1,6 +1,24 @@
 #!/usr/bin/env groovy
 package org.thesis_ci_automation_test
 
+// This is sample of a high-level Slack notification
+// module for Jenkins pipelines.
+//
+// Builds can simply call:
+//
+//   def slack = new SlackNotifier()
+//   slack.notify(currentBuild, currentBuild.getResult(), env)
+//
+// so the necessary logic for the message contents
+// are implemented here, and not in every single Jenkinsfile.
+
+/**
+ * Standardized wrapper for getting the Slack API colour
+ * for a build result code.
+ *
+ * @param result Build result code
+ * @returns SlackColours
+ */
 def getSlackColour(result) {
   result = result ?: 'SUCCESS' // null result means success
   switch (result) {
@@ -16,7 +34,9 @@ def getSlackColour(result) {
 /**
  * Notify Slack about build results
  *
- * TODO: Use actual result enum, when whitelisted in scripts
+ * @param build Current build
+ * @param result Current build result
+ * @param env Current build environment
  */
 def notify(build, result, env) {
   result = result?.toString() ?: 'SUCCESS' // null means success in Result
@@ -63,6 +83,12 @@ def notify(build, result, env) {
   sendMessage(colour.colour, msg)
 }
 
+/**
+ * Send a freeform Slack message
+ *
+ * @param colour Colour name
+ * @param msg Message to send
+ */
 def sendMessage(colour, msg) {
   slackSend color: colour, message: msg
 }
