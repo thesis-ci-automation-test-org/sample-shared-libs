@@ -89,8 +89,7 @@ def call(body) {
         }
       }
 
-      stage('Prepare production deploy') {
-        // Production deploys should only be made from master
+      stage('Accept production deploy') {
         if (env.BRANCH_NAME == 'master') {
           milestone 4
 
@@ -109,20 +108,22 @@ def call(body) {
           // This is used in combination with input to only allow
           // the selected build to deploy.
           milestone 5
-
-          node {
-            // Re-use the previously created Docker image
-            dockerEnv.inside(dockerEnvArgs) {
-              sh 'npm run build:prod'
-            }
-          }
         }
       }
 
       node {
+        // Re-use the previously created Docker image
         dockerEnv.inside(dockerEnvArgs) {
+
+          stage('Prepare production deploy') {
+            // Production deploys should only be made from master
+            if (env.BRANCH_NAME == 'master') {
+              sh 'npm run build:prod'
+            }
+          }
+
           stage('Production deploy') {
-            if (env.BRANCH_NAME != 'master') {
+            if (env.BRANCH_NAME == 'master') {
               milestone 6
               lock(resource: 'prod-server', inversePrecedence: true) {
                 milestone 7
@@ -130,6 +131,7 @@ def call(body) {
               }
             }
           }
+
         }
       }
     }
