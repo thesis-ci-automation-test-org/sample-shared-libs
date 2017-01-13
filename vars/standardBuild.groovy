@@ -57,6 +57,7 @@ def call(body) {
               parallel unitTests: {
                 sh 'grunt unit'
               }, smokeTests: {
+                sleep 10
                 echo 'Do some rudimentary smoke tests here'
               }
             } finally {
