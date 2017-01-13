@@ -54,7 +54,11 @@ def call(body) {
 
           stage('Test') {
             try {
-              sh 'grunt unit'
+              parallel unitTests: {
+                sh 'grunt unit'
+              }, smokeTests: {
+                echo 'Do some rudimentary smoke tests here'
+              }
             } finally {
               // Test results should always be saved (or attempted)
               junit 'test-results/**/unit-test-results.xml'
