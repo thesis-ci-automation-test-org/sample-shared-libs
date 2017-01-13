@@ -46,6 +46,7 @@ def call(body) {
 
         // This image will be re-used later, so save a reference
         dockerEnv = docker.build("${config.projectName}_build", '-f Dockerfile.test .')
+          .withRegistry('http://my-registry:8082', 'docker-registry-creds')
         dockerEnv.inside(dockerEnvArgs) {
 
           stage('Build') {
