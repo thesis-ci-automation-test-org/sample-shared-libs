@@ -1,0 +1,15 @@
+# Standardized build
+
+Provides a highly standardized build.
+
+## Usage
+
+This is a **full** `Jenkinsfile` example:
+
+```
+@Library('thesisSampleLib') _
+
+standardBuild {
+  projectName = 'my-project-name'
+}
+```
