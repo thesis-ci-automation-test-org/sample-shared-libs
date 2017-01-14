@@ -10,11 +10,11 @@ def getBuildLink(env) {
 }
 
 @NonCPS
-def getFailedTestCount(build) {
-  def testResultAction = build.rawBuild.getAction(AbstractTestResultAction.class)
-  if (testResultAction == null ) {
-    return 0
+def getTestCounts(build) {
+  def res = build.rawBuild.getAction(AbstractTestResultAction.class)
+  if (res == null ) {
+    return 'No test results found'
   }
-  return testResultAction.failCount
+  return "Passed: ${res.totalCount - res.failCount}, Failed: ${res.failCount}, Skipped: ${res.skipCount}"
 }
 
