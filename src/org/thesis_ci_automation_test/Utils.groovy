@@ -7,3 +7,12 @@ def getBuildLink(env) {
   return "<${env.BUILD_URL}|Open>"
 }
 
+@NonCPS
+def getFailedTestCount(build) {
+  def testResultAction = build.rawBuild.getAction(AbstractTestResultAction.class)
+  if (testResultAction == null ) {
+    return 0
+  }
+  return testResultAction.failCount
+}
+
