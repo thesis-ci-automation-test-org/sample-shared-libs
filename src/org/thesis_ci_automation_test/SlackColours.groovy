@@ -11,10 +11,5 @@ enum SlackColours {
   private SlackColours(String colour) {
     this.colour = colour
   }
-
-  @Override
-  public String toString() {
-    return this.colour
-  }
 }
 
