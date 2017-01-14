@@ -12,6 +12,7 @@ enum SlackColours {
     this.colour = colour
   }
 
+  @Override
   public String toString() {
     return this.colour
   }
