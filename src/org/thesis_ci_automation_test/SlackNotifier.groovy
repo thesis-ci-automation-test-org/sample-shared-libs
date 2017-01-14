@@ -73,7 +73,7 @@ def notify(build, result, env) {
 
   // TODO: Enable when test results are accessible from JUnit
   msg += "\nTest Status:\n"
-  msg += "Passed: TODO, Failed: ${utils.getFailedTestCount(buid)}, Skipped: TODO"
+  msg += "Passed: TODO, Failed: ${utils.getFailedTestCount(build)}, Skipped: TODO"
 
   // Include Git changelog
   msg += "\n${gitHelper.getChangeLogString(build)}"
