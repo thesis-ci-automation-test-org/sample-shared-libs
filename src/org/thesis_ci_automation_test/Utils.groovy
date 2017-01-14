@@ -1,6 +1,8 @@
 #!/usr/bin/env groovy
 package org.thesis_ci_automation_test
 
+import hudson.tasks.test.AbstractTestResultAction
+
 // Sample utility methods for Jenkins pipelines
 
 def getBuildLink(env) {
