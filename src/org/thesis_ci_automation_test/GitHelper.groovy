@@ -14,22 +14,22 @@ package org.thesis_ci_automation_test
  */
 @NonCPS
 def getChangeLogString(build) {
-    def str = ""
+  def str = ""
 
-    // NOTE: Includes changes in this library
-    // which is probably OK
-    currentBuild.changeSets.each { set ->
-        set.items.each { item ->
-            str+= "- ${item.msg} [${item.author}]\n"
-        }
+  // NOTE: Includes changes in this library
+  // which is probably OK
+  currentBuild.changeSets.each { set ->
+    set.items.each { item ->
+      str+= "- ${item.msg} [${item.author}]\n"
     }
+  }
 
-    if (!str) {
-        return "No Changes."
-    } else {
-        str = "Changes:\n" + str
-    }
+  if (!str) {
+    return "No Changes."
+  } else {
+    str = "Changes:\n" + str
+  }
 
-    return str    
+  return str    
 }
 

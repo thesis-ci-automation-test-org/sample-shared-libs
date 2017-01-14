@@ -4,11 +4,11 @@ package org.thesis_ci_automation_test
 // for slackSend.
 
 enum SlackColours {
-    GOOD("good"), WARNING("warning"), DANGER("danger")
+  GOOD("good"), WARNING("warning"), DANGER("danger")
 
-    SlackColours(String colour) {
-        this.colour = colour
-    }
-
-    private final String colour
+  SlackColours(String colour) {
+    this.colour = colour
+  }
+  private final String colour
 }
+
