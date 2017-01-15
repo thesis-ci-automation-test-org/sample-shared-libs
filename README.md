@@ -1,5 +1,8 @@
 # sample-shared-libs
+
 Sample of Jenkins Pipeline Shared Libraries
+
+See [official documentation for more](https://github.com/jenkinsci/workflow-cps-global-lib-plugin/blob/master/README.md)
 
 ## Usage
 
