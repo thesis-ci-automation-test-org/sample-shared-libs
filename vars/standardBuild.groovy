@@ -48,8 +48,8 @@ def call(body) {
         }
 
         // This image will be re-used later, so save a reference
-        dockerEnv = docker.withRegistry('http://my-registry:8082', 'docker-login') {
-          docker.build("${config.projectName}_build", dockerBuildArgs)
+        docker.withRegistry('http://my-registry:8082', 'docker-login') {
+          dockerEnv = docker.build("${config.projectName}_build", dockerBuildArgs)
           dockerEnv.inside(dockerEnvArgs) {
   
             stage('Build') {
