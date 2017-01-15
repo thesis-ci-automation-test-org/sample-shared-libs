@@ -87,7 +87,9 @@ def call(body) {
               // We should only allow a single deploy at a time
               lock(resource: 'dev-server', inversePrecedence: true) {
                 milestone 3
-                sh './deploy.dev.sh'
+                retry(3) {
+                  sh './deploy.dev.sh'
+                }
               }
             }
           }
@@ -133,7 +135,9 @@ def call(body) {
               milestone 6
               lock(resource: 'prod-server', inversePrecedence: true) {
                 milestone 7
-                sh './deploy.prod.sh'
+                retry(3) {
+                  sh './deploy.prod.sh'
+                }
               }
             }
           }
