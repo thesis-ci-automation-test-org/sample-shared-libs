@@ -31,7 +31,8 @@ def call(body) {
   def dockerEnv = null
   def dockerBuildArgs = '-f Dockerfile.test .'
   def dockerEnvArgs = '-v /var/run/docker.sock:/var/run/docker.sock'
-  def DOCKER_REGISTRY_URI = 'http://my-registry:8082'
+  def DOCKER_REGISTRY_NAME = 'my-registry:8082'
+  def DOCKER_REGISTRY_URI = "http://${DOCKER_REGISTRY_NAME}"
 
   // Keep only last 5 builds
   properties([buildDiscarder(logRotator(numToKeepStr: '5'))])
@@ -82,7 +83,7 @@ def call(body) {
               if (env.BRANCH_NAME == 'dev') {
                 milestone 1
                 sh 'npm run build'
-                docker.build('sample-with-tests').push('latest')
+                docker.build("${DOCKER_REGISTRY_NAME}/sample-with-tests").push('latest')
               }
             }
 
