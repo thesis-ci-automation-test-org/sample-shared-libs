@@ -83,7 +83,8 @@ def call(body) {
                 milestone 1
                 sh 'npm run build'
                 sh "docker login --username=${USERNAME} --password=${PASSWORD} ${DOCKER_REGISTRY_URI}"
-                docker.build("${DOCKER_REGISTRY_NAME}/sample-with-tests").push('latest')
+                sh "docker build -t ${DOCKER_REGISTRY_NAME}/sample-with-tests:latest"
+                sh "docker push -t ${DOCKER_REGISTRY_NAME}/sample-with-tests:latest"
               }
             }
 
