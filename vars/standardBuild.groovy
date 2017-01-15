@@ -53,7 +53,6 @@ def call(body) {
         withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'docker-login', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
           dockerEnv = docker.build("${config.projectName}_build", dockerBuildArgs)
           dockerEnv.inside(dockerEnvArgs) {
-            sh "docker login --username=${USERNAME} --password=${PASSWORD} ${DOCKER_REGISTRY_URI}"
 
             stage('Build') {
               sh 'npm run dependencies'
@@ -83,6 +82,7 @@ def call(body) {
               if (env.BRANCH_NAME == 'dev') {
                 milestone 1
                 sh 'npm run build'
+                sh "docker login --username=${USERNAME} --password=${PASSWORD} ${DOCKER_REGISTRY_URI}"
                 docker.build("${DOCKER_REGISTRY_NAME}/sample-with-tests").push('latest')
               }
             }
