@@ -79,7 +79,8 @@ def call(body) {
               // as then they would not be rendered at all.
               if (env.BRANCH_NAME == 'dev') {
                 milestone 1
-                sh 'npm run build:dev'
+                sh 'npm run build'
+                docker.build('sample-with-tests').push('latest')
               }
             }
   
