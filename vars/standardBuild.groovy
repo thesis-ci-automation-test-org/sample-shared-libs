@@ -107,7 +107,9 @@ def call(body) {
             SlackColours.GOOD.colour,
             "${currentBuild.getFullDisplayName()} - Waiting for input (${utils.getBuildLink(env)})"
           )
-          input 'Deploy to production?'
+          timeout(time: 1, unit: "MINUTES") {
+            input 'Deploy to production?'
+          }
 
           // When a milestone is passed, no currently running
           // other job can pass the same milestone,
