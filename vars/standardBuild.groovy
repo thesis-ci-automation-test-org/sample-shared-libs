@@ -30,7 +30,8 @@ def call(body) {
 
   def dockerEnv = null
   def dockerBuildArgs = '-f Dockerfile.test .'
-  def dockerEnvArgs = '-v /var/run/docker.sock:/var/run/docker.sock'
+  def dockerEnvArgs = ''
+  //def dockerEnvArgs = '-v /var/run/docker.sock:/var/run/docker.sock'
 
   // Keep only last 5 builds
   properties([buildDiscarder(logRotator(numToKeepStr: '5'))])
