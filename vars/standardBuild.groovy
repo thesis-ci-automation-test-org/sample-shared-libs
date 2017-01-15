@@ -1,5 +1,6 @@
 #!/usr/bin/env groovy
 import hudson.AbortException
+import org.jenkinsci.plugins.workflow.steps.FlowInterruptedException
 import org.thesis_ci_automation_test.*
 
 // This is an example of a highly standardized Pipeline
@@ -149,7 +150,12 @@ def call(body) {
       }
     }
 
+  } catch (FlowInterruptedException err) {
+    echo 'Catched FlowInterruptedException'
+    currentBuild.result = 'ABORTED'
+    throw err
   } catch (AbortException err) {
+    echo 'Catched AbortException'
     currentBuild.result = 'ABORTED'
     throw err
   } catch (err) {
