@@ -113,6 +113,8 @@ def call(body) {
             input 'Deploy to production?'
           }
 
+          echo 'DEBUG: Passed input step, reaching milestone 5'
+
           // When a milestone is passed, no currently running
           // other job can pass the same milestone,
           // and will be cancelled.
