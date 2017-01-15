@@ -31,6 +31,7 @@ def call(body) {
   def dockerEnv = null
   def dockerBuildArgs = '-f Dockerfile.test .'
   def dockerEnvArgs = '-v /var/run/docker.sock:/var/run/docker.sock'
+  def DOCKER_REGISTRY_URI = 'http://my-registry:8082'
 
   // Keep only last 5 builds
   properties([buildDiscarder(logRotator(numToKeepStr: '5'))])
@@ -48,14 +49,15 @@ def call(body) {
         }
 
         // This image will be re-used later, so save a reference
-        docker.withRegistry('http://my-registry:8082', 'docker-login') {
+        withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'docker-login', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
           dockerEnv = docker.build("${config.projectName}_build", dockerBuildArgs)
           dockerEnv.inside(dockerEnvArgs) {
-  
+            sh "docker login --username=${USERNAME} --password=${PASSWORD} ${DOCKER_REGISTRY_URI}"
+
             stage('Build') {
               sh 'npm run dependencies'
             }
-  
+
             stage('Test') {
               try {
                 parallel 'Unit tests': {
@@ -69,7 +71,7 @@ def call(body) {
                 junit 'test-results/**/unit-test-results.xml'
               }
             }
-  
+
             stage('Prepare dev deploy') {
               // Deployment's should only be made from the dev branch.
               // Blue Ocean will also mark this stage "Skipped",
@@ -83,7 +85,7 @@ def call(body) {
                 docker.build('sample-with-tests').push('latest')
               }
             }
-  
+
             stage('Development deploy') {
               if (env.BRANCH_NAME == 'dev') {
                 milestone 2
@@ -97,7 +99,7 @@ def call(body) {
                 }
               }
             }
-  
+
           }
         }
       }
