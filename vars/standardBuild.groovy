@@ -48,54 +48,56 @@ def call(body) {
         }
 
         // This image will be re-used later, so save a reference
-        dockerEnv = docker.withRegistry('http://my-registry:8082', 'docker-login').build("${config.projectName}_build", dockerBuildArgs)
-        dockerEnv.inside(dockerEnvArgs) {
-
-          stage('Build') {
-            sh 'npm run dependencies'
-          }
-
-          stage('Test') {
-            try {
-              parallel 'Unit tests': {
-                sh 'grunt unit'
-              }, 'Smoke tests': {
-                sleep 10
-                echo 'Do some rudimentary smoke tests here'
-              }
-            } finally {
-              // Test results should always be saved (or attempted)
-              junit 'test-results/**/unit-test-results.xml'
-            }
-          }
-
-          stage('Prepare dev deploy') {
-            // Deployment's should only be made from the dev branch.
-            // Blue Ocean will also mark this stage "Skipped",
-            // as there are no steps executed in else-case.
-            //
-            // This is clearer than skipping whole stages,
-            // as then they would not be rendered at all.
-            if (env.BRANCH_NAME == 'dev') {
-              milestone 1
-              sh 'npm run build:dev'
-            }
-          }
-
-          stage('Development deploy') {
-            if (env.BRANCH_NAME == 'dev') {
-              milestone 2
+        dockerEnv = docker.withRegistry('http://my-registry:8082', 'docker-login') {
+          docker.build("${config.projectName}_build", dockerBuildArgs)
+          dockerEnv.inside(dockerEnvArgs) {
   
-              // We should only allow a single deploy at a time
-              lock(resource: 'dev-server', inversePrecedence: true) {
-                milestone 3
-                retry(3) {
-                  sh './deploy.dev.sh'
+            stage('Build') {
+              sh 'npm run dependencies'
+            }
+  
+            stage('Test') {
+              try {
+                parallel 'Unit tests': {
+                  sh 'grunt unit'
+                }, 'Smoke tests': {
+                  sleep 10
+                  echo 'Do some rudimentary smoke tests here'
+                }
+              } finally {
+                // Test results should always be saved (or attempted)
+                junit 'test-results/**/unit-test-results.xml'
+              }
+            }
+  
+            stage('Prepare dev deploy') {
+              // Deployment's should only be made from the dev branch.
+              // Blue Ocean will also mark this stage "Skipped",
+              // as there are no steps executed in else-case.
+              //
+              // This is clearer than skipping whole stages,
+              // as then they would not be rendered at all.
+              if (env.BRANCH_NAME == 'dev') {
+                milestone 1
+                sh 'npm run build:dev'
+              }
+            }
+  
+            stage('Development deploy') {
+              if (env.BRANCH_NAME == 'dev') {
+                milestone 2
+    
+                // We should only allow a single deploy at a time
+                lock(resource: 'dev-server', inversePrecedence: true) {
+                  milestone 3
+                  retry(3) {
+                    sh './deploy.dev.sh'
+                  }
                 }
               }
             }
+  
           }
-
         }
       }
 
