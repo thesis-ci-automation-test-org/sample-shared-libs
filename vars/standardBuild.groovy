@@ -153,6 +153,7 @@ def call(body) {
     currentBuild.result = 'ABORTED'
     throw err
   } catch (err) {
+    echo "${err}"
     currentBuild.result = 'FAILURE'
     throw err
   } finally {
