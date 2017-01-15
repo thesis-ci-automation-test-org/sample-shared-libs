@@ -1,4 +1,5 @@
 #!/usr/bin/env groovy
+import hudson.AbortException
 import org.thesis_ci_automation_test.*
 
 // This is an example of a highly standardized Pipeline
