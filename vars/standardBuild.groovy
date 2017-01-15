@@ -150,12 +150,7 @@ def call(body) {
       }
     }
 
-  } catch (FlowInterruptedException err) {
-    echo 'Catched FlowInterruptedException'
-    currentBuild.result = 'ABORTED'
-    throw err
-  } catch (AbortException err) {
-    echo 'Catched AbortException'
+  } catch (FlowInterruptedException|AbortException err) {
     currentBuild.result = 'ABORTED'
     throw err
   } catch (err) {

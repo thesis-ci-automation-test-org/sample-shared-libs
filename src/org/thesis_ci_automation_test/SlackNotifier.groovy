@@ -49,7 +49,7 @@ def notify(build, result, env) {
   switch (result) {
     case 'ABORTED':
       echo 'Build was aborted, skipping Slack messages'
-      break
+      return
     case 'FAILURE':
       if (build.previousBuild?.result == 'FAILURE') {
         msg += ' - Build still failing!'
