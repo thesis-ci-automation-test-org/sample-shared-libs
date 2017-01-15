@@ -10,7 +10,7 @@ package org.thesis_ci_automation_test
  *
  * Includes commit messages and authors.
  * @param build Current build
- * @return String
+ * @returns String
  */
 @NonCPS
 def getChangeLogString(build) {
