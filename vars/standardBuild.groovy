@@ -35,14 +35,16 @@ def call(body) {
   def DOCKER_REGISTRY_URI = "http://${DOCKER_REGISTRY_NAME}"
 
   // Keep only last 5 builds
-  properties([buildDiscarder(logRotator(numToKeepStr: '5'))])
+  properties([
+    buildDiscarder(logRotator(numToKeepStr: '5')),
+    ansiColor('xterm')
+  ])
 
   // In regular Jenkinsfile (not declarative), we need to
   // manually manage errors and post-actions,
   // so wrap everything in try-catch-finally.
   try {
 
-    ansiColor('xterm') {
       node {
         stage('Checkout') {
           deleteDir()
@@ -155,7 +157,6 @@ def call(body) {
 
         }
       }
-    }
 
   } catch (FlowInterruptedException|AbortException err) {
     currentBuild.result = 'ABORTED'
