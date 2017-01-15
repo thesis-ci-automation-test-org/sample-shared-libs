@@ -80,6 +80,7 @@ def call(body) {
               if (env.BRANCH_NAME == 'dev') {
                 milestone 1
                 sh 'npm run build'
+                sh 'whoami'
                 docker.build('sample-with-tests').push('latest')
               }
             }
