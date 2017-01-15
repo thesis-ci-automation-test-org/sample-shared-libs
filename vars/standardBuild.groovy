@@ -37,7 +37,7 @@ def call(body) {
   // Keep only last 5 builds
   properties([
     buildDiscarder(logRotator(numToKeepStr: '5')),
-    ansiColor('xterm')
+    [$class: 'AnsiColorBuildWrapper']
   ])
 
   // In regular Jenkinsfile (not declarative), we need to
