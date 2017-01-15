@@ -83,10 +83,9 @@ def call(body) {
               // as then they would not be rendered at all.
               if (env.BRANCH_NAME == 'dev') {
                 milestone 1
-                sh 'npm run build'
                 sh "docker login --username=${USERNAME} --password=${PASSWORD} ${DOCKER_REGISTRY_URI}"
-                sh "docker build -t ${DOCKER_REGISTRY_NAME}/sample-with-tests:latest ."
-                sh "docker push ${DOCKER_REGISTRY_NAME}/sample-with-tests:latest"
+                sh 'npm run build:dev'
+                sh 'npm run publish:dev'
               }
             }
 
@@ -133,28 +132,33 @@ def call(body) {
       }
 
       node {
-        // Re-use the previously created Docker image
-        dockerEnv.inside(dockerEnvArgs) {
+        withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'docker-login', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
 
-          stage('Prepare production deploy') {
-            // Production deploys should only be made from master
-            if (env.BRANCH_NAME == 'master') {
-              sh 'npm run build:prod'
+          // Re-use the previously created Docker image
+          dockerEnv.inside(dockerEnvArgs) {
+
+            stage('Prepare production deploy') {
+              // Production deploys should only be made from master
+              if (env.BRANCH_NAME == 'master') {
+                sh "docker login --username=${USERNAME} --password=${PASSWORD} ${DOCKER_REGISTRY_URI}"
+                sh 'npm run build:prod'
+                sh 'npm run publish:prod'
+              }
             }
-          }
 
-          stage('Production deploy') {
-            if (env.BRANCH_NAME == 'master') {
-              milestone 6
-              lock(resource: 'prod-server', inversePrecedence: true) {
-                milestone 7
-                retry(3) {
-                  sh './deploy.prod.sh'
+            stage('Production deploy') {
+              if (env.BRANCH_NAME == 'master') {
+                milestone 6
+                lock(resource: 'prod-server', inversePrecedence: true) {
+                  milestone 7
+                  retry(3) {
+                    sh './deploy.prod.sh'
+                  }
                 }
               }
             }
-          }
 
+          }
         }
       }
     }
