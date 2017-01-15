@@ -49,8 +49,8 @@ def call(body) {
           checkout scm
         }
 
-        // This image will be re-used later, so save a reference
         withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'docker-login', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
+          // This image will be re-used later, so save a reference
           dockerEnv = docker.build("${config.projectName}_build", dockerBuildArgs)
           dockerEnv.inside(dockerEnvArgs) {
 
