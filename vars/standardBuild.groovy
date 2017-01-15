@@ -148,8 +148,10 @@ def call(body) {
       }
     }
 
+  } catch (AbortException err) {
+    currentBuild.result = 'ABORTED'
+    throw err
   } catch (err) {
-    // TODO: Handle ABORTED separately
     currentBuild.result = 'FAILURE'
     throw err
   } finally {
