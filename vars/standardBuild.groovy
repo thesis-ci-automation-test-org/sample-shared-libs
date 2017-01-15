@@ -36,8 +36,7 @@ def call(body) {
 
   // Keep only last 5 builds
   properties([
-    buildDiscarder(logRotator(numToKeepStr: '5')),
-    [$class: 'AnsiColorBuildWrapper']
+    buildDiscarder(logRotator(numToKeepStr: '5'))
   ])
 
   // In regular Jenkinsfile (not declarative), we need to
@@ -45,6 +44,7 @@ def call(body) {
   // so wrap everything in try-catch-finally.
   try {
 
+    ansiColor('xterm') {
       node {
         stage('Checkout') {
           deleteDir()
@@ -157,6 +157,7 @@ def call(body) {
 
         }
       }
+    }
 
   } catch (FlowInterruptedException|AbortException err) {
     currentBuild.result = 'ABORTED'
