@@ -107,7 +107,7 @@ def call(body) {
             SlackColours.GOOD.colour,
             "${currentBuild.getFullDisplayName()} - Waiting for input (${utils.getBuildLink(env)})"
           )
-          timeout(time: 1, unit: "MINUTES") {
+          timeout(time: 1, unit: "DAYS") {
             input 'Deploy to production?'
           }
 
