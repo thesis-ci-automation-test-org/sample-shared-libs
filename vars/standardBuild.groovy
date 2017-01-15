@@ -84,7 +84,7 @@ def call(body) {
                 sh 'npm run build'
                 sh "docker login --username=${USERNAME} --password=${PASSWORD} ${DOCKER_REGISTRY_URI}"
                 sh "docker build -t ${DOCKER_REGISTRY_NAME}/sample-with-tests:latest ."
-                sh "docker push -t ${DOCKER_REGISTRY_NAME}/sample-with-tests:latest"
+                sh "docker push ${DOCKER_REGISTRY_NAME}/sample-with-tests:latest"
               }
             }
 
