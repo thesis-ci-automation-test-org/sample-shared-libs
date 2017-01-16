@@ -71,6 +71,14 @@ def call(body) {
               } finally {
                 // Test results should always be saved (or attempted)
                 junit 'test-results/**/unit-test-results.xml'
+                publishHTML(target: [
+                  reportName: 'Coverage report',
+                  reportDir: 'test-results/html',
+                  reportFiles: 'index.html',
+                  keepAll: true,
+                  alwaysLinkToLastBuild: true,
+                  allowMissing: false
+                ])
               }
             }
 
