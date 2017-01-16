@@ -47,7 +47,7 @@ def call(body) {
     ansiColor('xterm') {
       node {
         stage('Checkout') {
-          deleteDir()
+          //deleteDir() // TODO: Uncomment when done demoing
           checkout scm
         }
 
