@@ -13,7 +13,7 @@ import org.jenkinsci.plugins.displayurlapi.DisplayURLProvider
  * @returns String Slack-formatted link
  */
 def getBuildLink(build) {
-  return "<${DisplayURLProvider.get().getRunURL(currentBuild.getRawBuild()}|Open>"
+  return "<${DisplayURLProvider.get().getRunURL(currentBuild.getRawBuild())}|Open>"
 }
 
 /**
