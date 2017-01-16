@@ -123,7 +123,7 @@ def call(body) {
           // pending inputs, we need to manually notify users.
           slack.sendMessage(
             SlackColours.GOOD.colour,
-            "${currentBuild.getFullDisplayName()} - Waiting for input (${utils.getBuildLink(env)})"
+            "${currentBuild.getFullDisplayName()} - Waiting for input (${utils.getBuildLink(currentBuild)})"
           )
           timeout(time: 1, unit: "DAYS") {
             input 'Deploy to production?'

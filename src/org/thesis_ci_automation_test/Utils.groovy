@@ -2,17 +2,18 @@
 package org.thesis_ci_automation_test
 
 import hudson.tasks.test.AbstractTestResultAction
+import org.jenkinsci.plugins.displayurlapi.DisplayURLProvider
 
 // Sample utility methods for Jenkins pipelines
 
 /**
  * Get build link for Slack
  *
- * @param env Current build's environment map
+ * @param build Current build
  * @returns String Slack-formatted link
  */
-def getBuildLink(env) {
-  return "<${env.BUILD_URL}|Open>"
+def getBuildLink(build) {
+  return "<${DisplayURLProvider.get().getRunURL(currentBuild.getRawBuild()}|Open>"
 }
 
 /**

@@ -69,7 +69,7 @@ def notify(build, result, env) {
       echo "SlackNotifier: Did not recognize build status code: ${result}"
   }
 
-  msg += " (${utils.getBuildLink(env)})"
+  msg += " (${utils.getBuildLink(build)})"
 
   msg += "\nTest Status:\n${utils.getTestCounts(build)}"
 
