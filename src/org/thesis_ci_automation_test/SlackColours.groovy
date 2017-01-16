@@ -1,4 +1,7 @@
+#!/usr/bin/env groovy
 package org.thesis_ci_automation_test
+
+import java.lang.Enum 
 
 // Slack API requires special colour name Strings
 // for slackSend.
