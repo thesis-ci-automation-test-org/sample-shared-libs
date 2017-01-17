@@ -14,9 +14,9 @@ package org.thesis_ci_automation_test
 
 class SlackNotifier implements Serializable {
 
-  static GOOD = 'good'
-  static DANGER = 'danger'
-  static WARNING = 'warning'
+  static String GOOD = 'good'
+  static String DANGER = 'danger'
+  static String WARNING = 'warning'
 
   /**
    * Standardized wrapper for getting the Slack API colour
