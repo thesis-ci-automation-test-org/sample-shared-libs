@@ -12,7 +12,7 @@ package org.thesis_ci_automation_test
 // so the necessary logic for the message contents
 // are implemented here, and not in every single Jenkinsfile.
 
-class SlackNotifier {
+class SlackNotifier implements Serializable {
 
   static GOOD = 'good'
   static DANGER = 'danger'
