@@ -12,22 +12,26 @@ package org.thesis_ci_automation_test
 // so the necessary logic for the message contents
 // are implemented here, and not in every single Jenkinsfile.
 
+static def GOOD = 'good'
+static def DANGER = 'danger'
+static def WARNING = 'warning'
+
 /**
  * Standardized wrapper for getting the Slack API colour
  * for a build result code.
  *
  * @param result Build result code
- * @returns SlackColours
+ * @returns String
  */
 def getSlackColour(result) {
   result = result ?: 'SUCCESS' // null result means success
   switch (result) {
     case 'FAILURE':
-      return SlackColours.DANGER
+      return SlackNotifier.DANGER
     case 'SUCCESS':
-      return SlackColours.GOOD
+      return SlackNotifier.GOOD
     default:
-      return SlackColours.WARNING // Don't know what happened
+      return SlackNotifier.WARNING // Don't know what happened
   }
 }
 
