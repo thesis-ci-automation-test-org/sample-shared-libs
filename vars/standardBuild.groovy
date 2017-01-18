@@ -122,7 +122,7 @@ def call(body) {
           // As there's currently no good way to visualize
           // pending inputs, we need to manually notify users.
           slack.sendMessage(
-            SlackColours.GOOD.colour,
+            SlackColours.GOOD,
             "${currentBuild.getFullDisplayName()} - Waiting for input (${utils.getBuildLink(currentBuild)})"
           )
           timeout(time: 1, unit: "DAYS") {
